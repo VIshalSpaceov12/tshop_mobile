@@ -11,6 +11,10 @@ import '../screens/checkout/order_success_screen.dart';
 import '../screens/products/product_list_screen.dart';
 import '../screens/products/product_detail_screen.dart';
 import '../screens/wishlist/wishlist_screen.dart';
+import '../screens/orders/orders_screen.dart';
+import '../screens/orders/order_detail_screen.dart';
+import '../screens/account/account_screen.dart';
+import '../screens/account/edit_profile_screen.dart';
 
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -74,7 +78,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: '/account',
             pageBuilder: (context, state) => const NoTransitionPage(
-              child: _PlaceholderScreen(title: 'Account'),
+              child: AccountScreen(),
             ),
           ),
         ],
@@ -104,7 +108,14 @@ final routerProvider = Provider<GoRouter>((ref) {
           orderId: state.pathParameters['orderId']!,
         ),
       ),
-      GoRoute(path: '/orders', builder: (_, __) => const _PlaceholderScreen(title: 'Orders')),
+      GoRoute(path: '/orders', builder: (_, __) => const OrdersScreen()),
+      GoRoute(
+        path: '/orders/:orderId',
+        builder: (_, state) => OrderDetailScreen(
+          orderId: state.pathParameters['orderId']!,
+        ),
+      ),
+      GoRoute(path: '/account/edit', builder: (_, __) => const EditProfileScreen()),
       GoRoute(path: '/admin', builder: (_, __) => const _PlaceholderScreen(title: 'Admin')),
     ],
   );
