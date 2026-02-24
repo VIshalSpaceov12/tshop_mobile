@@ -53,7 +53,7 @@ class ProductSection extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         SizedBox(
-          height: 280,
+          height: 300,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 16),
