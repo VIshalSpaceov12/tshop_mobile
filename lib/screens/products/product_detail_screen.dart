@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../core/theme.dart';
 import '../../models/product.dart';
+import '../../providers/auth_provider.dart';
+import '../../providers/cart_provider.dart';
 import '../../providers/product_provider.dart';
+import '../../providers/wishlist_provider.dart';
 import '../../widgets/error_view.dart';
 import '../../widgets/price_tag.dart';
 import '../../widgets/product_card.dart';
@@ -23,6 +27,7 @@ class ProductDetailScreen extends ConsumerStatefulWidget {
 class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
   String? _selectedSize;
   String? _selectedColor;
+  bool _isAddingToCart = false;
 
   @override
   Widget build(BuildContext context) {
@@ -209,20 +214,40 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
         Positioned(
           top: MediaQuery.of(context).padding.top + 8,
           right: 8,
-          child: CircleAvatar(
-            backgroundColor: Colors.white.withValues(alpha: 0.9),
-            child: IconButton(
-              icon: Icon(
-                data.isWishlisted
-                    ? Icons.favorite
-                    : Icons.favorite_border,
-                color:
-                    data.isWishlisted ? Colors.red : AppTheme.darkText,
-              ),
-              onPressed: () {
-                // TODO: Toggle wishlist
-              },
-            ),
+          child: Consumer(
+            builder: (context, ref, _) {
+              final wishlistState = ref.watch(wishlistProvider);
+              final authState = ref.watch(authProvider);
+              final isWishlisted = wishlistState.isWishlisted(product.id);
+
+              return CircleAvatar(
+                backgroundColor: Colors.white.withValues(alpha: 0.9),
+                child: IconButton(
+                  icon: Icon(
+                    isWishlisted ? Icons.favorite : Icons.favorite_border,
+                    color: isWishlisted ? Colors.red : AppTheme.darkText,
+                  ),
+                  onPressed: () async {
+                    if (authState.status != AuthStatus.authenticated) {
+                      context.push('/login');
+                      return;
+                    }
+                    final wasWishlisted = isWishlisted;
+                    await ref.read(wishlistProvider.notifier).toggleWishlist(product.id);
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(wasWishlisted
+                              ? 'Removed from wishlist'
+                              : 'Added to wishlist'),
+                          duration: const Duration(seconds: 2),
+                        ),
+                      );
+                    }
+                  },
+                ),
+              );
+            },
           ),
         ),
         // Add to Cart button
@@ -247,33 +272,74 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                 ),
               ],
             ),
-            child: ElevatedButton(
-              onPressed: _selectedSize != null
-                  ? () {
-                      // TODO: Add to cart
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text('Added to cart!')),
-                      );
-                    }
-                  : null,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.darkText,
-                disabledBackgroundColor: Colors.grey.shade300,
-                minimumSize: const Size(double.infinity, 52),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              child: Text(
-                _selectedSize != null
-                    ? 'Add to Cart'
-                    : 'Select a Size',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+            child: Consumer(
+              builder: (context, ref, _) {
+                final authState = ref.watch(authProvider);
+
+                return ElevatedButton(
+                  onPressed: (_selectedSize != null && !_isAddingToCart)
+                      ? () async {
+                          if (authState.status != AuthStatus.authenticated) {
+                            context.push('/login');
+                            return;
+                          }
+
+                          // Find the matching variant
+                          final matchingVariant = variants.where((v) {
+                            final colorMatch = _selectedColor == null || v.color == _selectedColor;
+                            return v.size == _selectedSize && colorMatch && v.stock > 0;
+                          }).firstOrNull;
+
+                          if (matchingVariant == null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Selected variant is unavailable')),
+                            );
+                            return;
+                          }
+
+                          setState(() => _isAddingToCart = true);
+                          final success = await ref
+                              .read(cartProvider.notifier)
+                              .addToCart(matchingVariant.id);
+                          setState(() => _isAddingToCart = false);
+
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(success
+                                    ? 'Added to cart!'
+                                    : 'Failed to add to cart'),
+                              ),
+                            );
+                          }
+                        }
+                      : null,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.darkText,
+                    disabledBackgroundColor: Colors.grey.shade300,
+                    minimumSize: const Size(double.infinity, 52),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: _isAddingToCart
+                      ? const SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : Text(
+                          _selectedSize != null ? 'Add to Cart' : 'Select a Size',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                );
+              },
             ),
           ),
         ),
