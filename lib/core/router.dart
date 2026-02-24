@@ -5,8 +5,12 @@ import '../providers/auth_provider.dart';
 import '../screens/auth/login_screen.dart';
 import '../screens/auth/register_screen.dart';
 import '../screens/home/home_screen.dart';
+import '../screens/cart/cart_screen.dart';
+import '../screens/checkout/checkout_screen.dart';
+import '../screens/checkout/order_success_screen.dart';
 import '../screens/products/product_list_screen.dart';
 import '../screens/products/product_detail_screen.dart';
+import '../screens/wishlist/wishlist_screen.dart';
 
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -58,13 +62,13 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: '/cart',
             pageBuilder: (context, state) => const NoTransitionPage(
-              child: _PlaceholderScreen(title: 'Cart'),
+              child: CartScreen(),
             ),
           ),
           GoRoute(
             path: '/wishlist',
             pageBuilder: (context, state) => const NoTransitionPage(
-              child: _PlaceholderScreen(title: 'Wishlist'),
+              child: WishlistScreen(),
             ),
           ),
           GoRoute(
@@ -93,7 +97,13 @@ final routerProvider = Provider<GoRouter>((ref) {
           slug: state.pathParameters['slug']!,
         ),
       ),
-      GoRoute(path: '/checkout', builder: (_, __) => const _PlaceholderScreen(title: 'Checkout')),
+      GoRoute(path: '/checkout', builder: (_, __) => const CheckoutScreen()),
+      GoRoute(
+        path: '/order-success/:orderId',
+        builder: (_, state) => OrderSuccessScreen(
+          orderId: state.pathParameters['orderId']!,
+        ),
+      ),
       GoRoute(path: '/orders', builder: (_, __) => const _PlaceholderScreen(title: 'Orders')),
       GoRoute(path: '/admin', builder: (_, __) => const _PlaceholderScreen(title: 'Admin')),
     ],
