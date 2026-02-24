@@ -105,6 +105,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
+  void updateUser(User updatedUser) {
+    state = state.copyWith(user: updatedUser);
+  }
+
   Future<void> logout() async {
     final tokenStorage = _ref.read(tokenStorageProvider);
     await tokenStorage.clear();
