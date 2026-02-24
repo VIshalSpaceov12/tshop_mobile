@@ -12,6 +12,11 @@ import '../repositories/address_repository.dart';
 import '../repositories/checkout_repository.dart';
 import '../repositories/order_repository.dart';
 import '../repositories/account_repository.dart';
+import '../repositories/admin_products_repository.dart';
+import '../repositories/admin_orders_repository.dart';
+import '../repositories/admin_categories_repository.dart';
+import '../repositories/admin_banners_repository.dart';
+import '../repositories/admin_dashboard_repository.dart';
 
 // SharedPreferences — initialized in main.dart before runApp
 final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
@@ -65,4 +70,24 @@ final orderRepositoryProvider = Provider<OrderRepository>((ref) {
 final accountRepositoryProvider = Provider<AccountRepository>((ref) {
   final dio = ref.watch(dioClientProvider).dio;
   return AccountRepository(dio);
+});
+
+final adminProductsRepositoryProvider = Provider<AdminProductsRepository>((ref) {
+  return AdminProductsRepository(ref.watch(dioClientProvider).dio);
+});
+
+final adminOrdersRepositoryProvider = Provider<AdminOrdersRepository>((ref) {
+  return AdminOrdersRepository(ref.watch(dioClientProvider).dio);
+});
+
+final adminCategoriesRepositoryProvider = Provider<AdminCategoriesRepository>((ref) {
+  return AdminCategoriesRepository(ref.watch(dioClientProvider).dio);
+});
+
+final adminBannersRepositoryProvider = Provider<AdminBannersRepository>((ref) {
+  return AdminBannersRepository(ref.watch(dioClientProvider).dio);
+});
+
+final adminDashboardRepositoryProvider = Provider<AdminDashboardRepository>((ref) {
+  return AdminDashboardRepository(ref.watch(dioClientProvider).dio);
 });
