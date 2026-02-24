@@ -6,6 +6,10 @@ import '../repositories/auth_repository.dart';
 import '../repositories/product_repository.dart';
 import '../repositories/category_repository.dart';
 import '../repositories/banner_repository.dart';
+import '../repositories/cart_repository.dart';
+import '../repositories/wishlist_repository.dart';
+import '../repositories/address_repository.dart';
+import '../repositories/checkout_repository.dart';
 
 // SharedPreferences — initialized in main.dart before runApp
 final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
@@ -34,4 +38,20 @@ final categoryRepositoryProvider = Provider<CategoryRepository>((ref) {
 
 final bannerRepositoryProvider = Provider<BannerRepository>((ref) {
   return BannerRepository(ref.watch(dioClientProvider).dio);
+});
+
+final cartRepositoryProvider = Provider<CartRepository>((ref) {
+  return CartRepository(ref.watch(dioClientProvider).dio);
+});
+
+final wishlistRepositoryProvider = Provider<WishlistRepository>((ref) {
+  return WishlistRepository(ref.watch(dioClientProvider).dio);
+});
+
+final addressRepositoryProvider = Provider<AddressRepository>((ref) {
+  return AddressRepository(ref.watch(dioClientProvider).dio);
+});
+
+final checkoutRepositoryProvider = Provider<CheckoutRepository>((ref) {
+  return CheckoutRepository(ref.watch(dioClientProvider).dio);
 });
