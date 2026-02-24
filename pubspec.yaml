@@ -1,0 +1,44 @@
+name: tshop_mobile
+description: "SHOP. - Fashion E-Commerce Mobile App"
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.8.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  # State management
+  flutter_riverpod: ^2.6.1
+  riverpod_annotation: ^2.6.1
+  # Networking
+  dio: ^5.7.0
+  retrofit: 4.4.1
+  # Navigation
+  go_router: ^14.8.1
+  # Local storage
+  shared_preferences: ^2.5.3
+  # Models
+  freezed_annotation: ^2.4.4
+  json_annotation: ^4.9.0
+  # UI
+  cached_network_image: ^3.4.1
+  google_fonts: ^6.2.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  # Code generation
+  build_runner: ^2.4.13
+  freezed: ^2.5.7
+  json_serializable: ^6.9.0
+  retrofit_generator: 9.1.5
+  riverpod_generator: ^2.6.3
+  custom_lint: ^0.7.0
+  riverpod_lint: ^2.6.3
+
+flutter:
+  uses-material-design: true
