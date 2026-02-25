@@ -16,6 +16,7 @@ import '../screens/orders/orders_screen.dart';
 import '../screens/orders/order_detail_screen.dart';
 import '../screens/account/account_screen.dart';
 import '../screens/account/edit_profile_screen.dart';
+import '../screens/account/addresses_screen.dart';
 import '../screens/admin/admin_dashboard_screen.dart';
 import '../screens/admin/admin_orders_screen.dart';
 import '../screens/admin/admin_order_detail_screen.dart';
@@ -126,6 +127,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         ),
       ),
       GoRoute(path: '/account/edit', builder: (_, __) => const EditProfileScreen()),
+      GoRoute(path: '/account/addresses', builder: (_, __) => const AddressesScreen()),
       // Admin shell with bottom nav
       ShellRoute(
         navigatorKey: _adminShellNavigatorKey,

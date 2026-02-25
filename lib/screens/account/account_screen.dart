@@ -117,7 +117,7 @@ class AccountScreen extends ConsumerWidget {
                   _MenuTile(
                     icon: Icons.location_on_outlined,
                     title: 'My Addresses',
-                    onTap: () => context.push('/checkout'),
+                    onTap: () => context.push('/account/addresses'),
                   ),
                   Divider(height: 1, color: Colors.grey.shade200),
                   _MenuTile(
