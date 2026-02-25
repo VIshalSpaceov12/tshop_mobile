@@ -23,6 +23,7 @@ import '../screens/admin/admin_products_screen.dart';
 import '../screens/admin/admin_product_form_screen.dart';
 import '../screens/admin/admin_categories_screen.dart';
 import '../screens/admin/admin_banners_screen.dart';
+import '../screens/categories/categories_screen.dart';
 
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
 final _adminShellNavigatorKey = GlobalKey<NavigatorState>();
@@ -69,7 +70,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: '/categories',
             pageBuilder: (context, state) => const NoTransitionPage(
-              child: _PlaceholderScreen(title: 'Categories'),
+              child: CategoriesScreen(),
             ),
           ),
           GoRoute(
@@ -238,15 +239,3 @@ class _AdminScaffoldWithNav extends StatelessWidget {
   }
 }
 
-class _PlaceholderScreen extends StatelessWidget {
-  final String title;
-  const _PlaceholderScreen({required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(title)),
-      body: Center(child: Text('$title — Coming soon')),
-    );
-  }
-}
